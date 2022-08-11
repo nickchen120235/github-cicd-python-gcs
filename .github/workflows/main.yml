@@ -31,7 +31,7 @@ jobs:
 
     - name: "Check output file"
       id: check-output
-      run: [ -f clothes.json ] && echo "::set-output name=ok::true"
+      run: "[ -f clothes.json ] && echo ::set-output name=ok::true"
 
     - name: Authenticate with Google Cloud
       if: ${{ steps.check-output.outputs.ok }}
