@@ -6,6 +6,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup as bs
+from datetime import date
 import json
 import os
 
@@ -33,7 +34,7 @@ soup = bs(html, 'lxml')
 charas =  soup.body.find('div', {'class': 'pFull'}).find_all('div', {'class': 'jss1'})
 print(f'[+] Found {len(charas)} characters')
 
-all_clothes = []
+all_clothes = {}
 for chara in charas:
   print()
   name = chara.find('div', {'class': 'jss4'}).text
@@ -62,12 +63,14 @@ for chara in charas:
   
   print(f'[+] Done. {len(clothes)} 12.5% clothes')
   assert len(clothes) <= len(clothes_raw)
-  all_clothes.append({
-    'name': name,
-    'clothes': clothes
-  })
+  all_clothes[name] = clothes
 
 drv.quit()
 
+output = {
+  'lastUpdated': str(date.today()),
+  'clothes': all_clothes
+}
+
 with open('clothes.json', 'w') as f:
-  f.write(json.dumps(all_clothes, indent=2, ensure_ascii=False))
+  f.write(json.dumps(output, indent=2, ensure_ascii=False))
