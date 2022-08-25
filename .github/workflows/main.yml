@@ -1,6 +1,8 @@
 on:
   push:
     branches: [master]
+  schedule:
+    cron: "30 5 * * 5"
 
 jobs:
   run-and-upload:
