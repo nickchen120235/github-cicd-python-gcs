@@ -55,10 +55,12 @@ for chara in charas:
       t = TYPE_DICT[desc.split('+')[0]]
       img = f"https://allb.game-db.tw{c.find('img')['src']}"
       alt = c.find('img')['alt']
+      is15percent = '15' in desc
       clothes.append({
         'type': t,
         'img': img,
-        'alt': alt
+        'alt': alt,
+        'is15percent': is15percent
       })
   
   print(f'[+] Done. {len(clothes)} 12.5% clothes')
