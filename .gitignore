@@ -1,6 +1,3 @@
-*.py
-!chara.py
-
 *.json
 *.log
 geckodriver

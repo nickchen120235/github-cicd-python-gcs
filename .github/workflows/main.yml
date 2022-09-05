@@ -33,12 +33,15 @@ jobs:
     - name: "Get geckodriver"
       uses: browser-actions/setup-geckodriver@latest
 
-    - name: "Fetch data"
+    - name: "Fetch chara data"
       run: python3 -u chara.py
+
+    - name: "Fetch order data"
+      run: python3 -u order.py
 
     - name: "Check output file"
       id: check-output
-      run: "[ -f clothes.json ] && echo ::set-output name=ok::true"
+      run: "[[ -f clothes.json && -f orders.json ]] && echo ::set-output name=ok::true"
 
     - name: Authenticate with Google Cloud
       if: ${{ steps.check-output.outputs.ok }}
@@ -49,13 +52,20 @@ jobs:
     - name: "Setup Google Cloud SDK"
       uses: google-github-actions/setup-gcloud@v0
 
-    - name: Upload data to Google Cloud Storage
+    - name: Upload clothes.json to Google Cloud Storage
       if: ${{ steps.check-output.outputs.ok }}
       uses: google-github-actions/upload-cloud-storage@v0
       with:
         path: clothes.json
         destination: ${{ secrets.GCP_CLOUD_STORAGE_BUCKET }}
 
+    - name: Upload orders.json to Google Cloud Storage
+      if: ${{ steps.check-output.outputs.ok }}
+      uses: google-github-actions/upload-cloud-storage@v0
+      with:
+        path: orders.json
+        destination: ${{ secrets.GCP_CLOUD_STORAGE_BUCKET }}
+
     - name: Set uploaded data to be publicly accessible
       if: ${{ steps.check-output.outputs.ok }}
-      run: gsutil acl ch -u AllUsers:R gs://${{ secrets.GCP_CLOUD_STORAGE_BUCKET }}/clothes.json
+      run: gsutil acl ch -u AllUsers:R gs://${{ secrets.GCP_CLOUD_STORAGE_BUCKET }}/**.json
