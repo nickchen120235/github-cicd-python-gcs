@@ -2,7 +2,7 @@ on:
   push:
     branches: [master]
   schedule:
-    - cron: "30 5 * * 5"
+    - cron: "30 21 * * 5"
 
 jobs:
   run-and-upload:
@@ -12,6 +12,11 @@ jobs:
       id-token: write
 
     steps:
+    - name: "Setup timezone"
+      uses: zcong1993/setup-timezone@master
+      with:
+        timezone: "Asia/Taipei"
+
     - uses: actions/checkout@v3
 
     - name: "Setup Python environment"
